@@ -1,5 +1,6 @@
 'use client'
 
+import React from 'react'
 import { useRouter } from 'next/navigation'
 import { format, addDays, subDays, parseISO } from 'date-fns'
 import { es } from 'date-fns/locale'
@@ -29,6 +30,8 @@ export default function DateSelector({ currentDate }: DateSelectorProps) {
         router.push(`/?date=${next}`)
     }
 
+    const dateInputRef = React.useRef<HTMLInputElement>(null)
+
     return (
         <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
             <button onClick={handlePrev} className="btn btn-secondary">
@@ -56,14 +59,8 @@ export default function DateSelector({ currentDate }: DateSelectorProps) {
                     onMouseOut={(e) => e.currentTarget.style.borderColor = 'transparent'}
                     onClick={(e) => {
                         e.preventDefault()
-                        // Programmatically click or showPicker if supported
-                        const input = document.getElementById('date-picker') as HTMLInputElement
-                        if (input) {
-                            if ('showPicker' in input) {
-                                (input as any).showPicker()
-                            } else {
-                                input.click()
-                            }
+                        if (dateInputRef.current) {
+                            dateInputRef.current.click()
                         }
                     }}
                 >
@@ -73,6 +70,7 @@ export default function DateSelector({ currentDate }: DateSelectorProps) {
 
                 {/* Hidden but functional date input */}
                 <input
+                    ref={dateInputRef}
                     id="date-picker"
                     type="date"
                     value={format(date, 'yyyy-MM-dd')}
@@ -84,7 +82,7 @@ export default function DateSelector({ currentDate }: DateSelectorProps) {
                         width: 0,
                         height: 0,
                         opacity: 0,
-                        pointerEvents: 'none' // We rely on label click to trigger it via JS or association
+                        pointerEvents: 'none'
                     }}
                 />
             </div>
