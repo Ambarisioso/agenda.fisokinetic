@@ -2,7 +2,7 @@
 
 import React, { useRef, useState, useEffect } from 'react'
 import { createPortal } from 'react-dom'
-import { createAppointment } from '@/app/actions'
+import { createAppointment, updateAppointment, cancelAppointment } from '@/app/actions'
 import styles from './CalendarGrid.module.css'
 
 interface AppointmentModalProps {
@@ -12,6 +12,11 @@ interface AppointmentModalProps {
     therapistName: string
     initialDate: string // YYYY-MM-DD
     initialTime: string // HH:mm
+    // Optional props for Editing
+    appointmentId?: number
+    initialPatientName?: string
+    initialPatientPhone?: string
+    initialDuration?: number
 }
 
 export default function AppointmentModal({
@@ -20,17 +25,33 @@ export default function AppointmentModal({
     therapistId,
     therapistName,
     initialDate,
-    initialTime
+    initialTime,
+    appointmentId,
+    initialPatientName,
+    initialPatientPhone,
+    initialDuration = 60
 }: AppointmentModalProps) {
     const ref = useRef<HTMLFormElement>(null)
     const [loading, setLoading] = useState(false)
     const [mounted, setMounted] = useState(false)
+
+    const isEditing = !!appointmentId
 
     useEffect(() => {
         setMounted(true)
     }, [])
 
     if (!isOpen || !mounted) return null
+
+    const handleDelete = async () => {
+        if (!appointmentId) return
+        if (confirm('¿Estás seguro de que deseas cancelar esta cita?')) {
+            setLoading(true)
+            await cancelAppointment(appointmentId)
+            setLoading(false)
+            onClose()
+        }
+    }
 
     return createPortal(
         <div style={{
@@ -46,21 +67,28 @@ export default function AppointmentModal({
             zIndex: 9999
         }}>
             <div className="card" style={{ width: '400px', maxWidth: '90%' }}>
-                <h3 style={{ marginBottom: '1rem' }}>Nueva Cita</h3>
+                <h3 style={{ marginBottom: '1rem' }}>
+                    {isEditing ? 'Editar Cita' : 'Nueva Cita'}
+                </h3>
                 <p style={{ marginBottom: '1rem', color: 'var(--text-muted)' }}>
-                    Agendando con <strong>{therapistName}</strong>
+                    {isEditing ? 'Modificando cita con' : 'Agendando con'} <strong>{therapistName}</strong>
                 </p>
 
                 <form
                     ref={ref}
                     action={async (formData) => {
                         setLoading(true)
-                        await createAppointment(formData)
+                        if (isEditing) {
+                            await updateAppointment(formData)
+                        } else {
+                            await createAppointment(formData)
+                        }
                         setLoading(false)
                         onClose()
                     }}
                 >
                     <input type="hidden" name="therapistId" value={therapistId} />
+                    {isEditing && <input type="hidden" name="appointmentId" value={appointmentId} />}
 
                     <div style={{ display: 'flex', gap: '1rem', marginBottom: '1rem' }}>
                         <div style={{ flex: 1 }}>
@@ -75,7 +103,7 @@ export default function AppointmentModal({
 
                     <div style={{ marginBottom: '1rem' }}>
                         <label style={{ display: 'block', fontSize: '0.85rem' }}>Duración (min)</label>
-                        <select name="duration" defaultValue="60" style={{ width: '100%', padding: '0.5rem' }}>
+                        <select name="duration" defaultValue={initialDuration} style={{ width: '100%', padding: '0.5rem' }}>
                             <option value="30">30 min</option>
                             <option value="45">45 min</option>
                             <option value="60">60 min</option>
@@ -86,19 +114,48 @@ export default function AppointmentModal({
 
                     <div style={{ marginBottom: '1rem' }}>
                         <label style={{ display: 'block', fontSize: '0.85rem' }}>Nombre Paciente</label>
-                        <input type="text" name="patientName" required style={{ width: '100%', padding: '0.5rem' }} placeholder="Juan Pérez" />
+                        <input
+                            type="text"
+                            name="patientName"
+                            defaultValue={initialPatientName}
+                            required
+                            style={{ width: '100%', padding: '0.5rem' }}
+                            placeholder="Juan Pérez"
+                        />
                     </div>
 
                     <div style={{ marginBottom: '1rem' }}>
                         <label style={{ display: 'block', fontSize: '0.85rem' }}>Teléfono (Opcional)</label>
-                        <input type="tel" name="patientPhone" style={{ width: '100%', padding: '0.5rem' }} placeholder="555-..." />
+                        <input
+                            type="tel"
+                            name="patientPhone"
+                            defaultValue={initialPatientPhone}
+                            style={{ width: '100%', padding: '0.5rem' }}
+                            placeholder="555-..."
+                        />
                     </div>
 
-                    <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '0.5rem', marginTop: '1.5rem' }}>
-                        <button type="button" onClick={onClose} className="btn btn-secondary" disabled={loading}>Cancel</button>
-                        <button type="submit" className="btn btn-primary" disabled={loading}>
-                            {loading ? 'Guardando...' : 'Agendar'}
-                        </button>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '1.5rem' }}>
+                        {isEditing ? (
+                            <button
+                                type="button"
+                                onClick={handleDelete}
+                                className="btn"
+                                style={{ backgroundColor: 'var(--danger)', color: 'white', border: 'none' }}
+                                disabled={loading}
+                            >
+                                Cancelar Cita
+                            </button>
+                        ) : (
+                            <div></div> // Spacer
+                        )}
+
+                        <div style={{ display: 'flex', gap: '0.5rem' }}>
+                            <button type="button" onClick={onClose} className="btn btn-secondary" disabled={loading}>Cerrar</button>
+                            <button type="submit" className="btn btn-primary" disabled={loading}>
+                                {loading ? 'Guardando...' : (isEditing ? 'Guardar Cambios' : 'Agendar')}
+                            </button>
+                        </div>
                     </div>
                 </form>
             </div>

@@ -57,7 +57,8 @@ export default async function Dashboard({ searchParams }: PageProps) {
     id: app.id,
     startTime: app.startTime.toISOString(),
     endTime: app.endTime.toISOString(),
-    patientName: app.patient?.name || 'Desconocido',
+    patientName: app.patient.name,
+    patientPhone: app.patient.phone, // Pass phone for editing
     status: app.status,
     therapistId: app.therapistId
   }))

@@ -18,6 +18,7 @@ interface Appointment {
     startTime: string // ISO String
     endTime: string   // ISO String
     patientName: string
+    patientPhone?: string | null
     status: string
     therapistId: number
 }
@@ -32,11 +33,19 @@ export default function CalendarGrid({ therapists, appointments, currentDate: cu
     const currentDate = parseISO(currentDateStr)
     // Modal State
     const [modalOpen, setModalOpen] = useState(false)
-    const [selectedSlot, setSelectedSlot] = useState<{ therapistId: number, therapistName: string, date: string, time: string } | null>(null)
+    const [selectedSlot, setSelectedSlot] = useState<{
+        therapistId: number,
+        therapistName: string,
+        date: string,
+        time: string,
+        // Edit Mode Props
+        appointmentId?: number,
+        patientName?: string,
+        patientPhone?: string,
+        duration?: number
+    } | null>(null)
 
     const handleSlotClick = (therapist: Therapist, hour: number, minute: number) => {
-        console.log('Slot clicked', therapist.name, hour, minute)
-        // Format date YYYY-MM-DD
         const dateStr = format(currentDate, 'yyyy-MM-dd')
         const timeStr = `${hour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')}`
 
@@ -49,6 +58,25 @@ export default function CalendarGrid({ therapists, appointments, currentDate: cu
         setModalOpen(true)
     }
 
+    const handleAppointmentClick = (e: React.MouseEvent, app: Appointment, therapist: Therapist) => {
+        e.stopPropagation()
+        const start = parseISO(app.startTime)
+        const end = parseISO(app.endTime)
+        const duration = differenceInMinutes(end, start)
+
+        setSelectedSlot({
+            therapistId: therapist.id,
+            therapistName: therapist.name,
+            date: format(start, 'yyyy-MM-dd'),
+            time: format(start, 'HH:mm'),
+            appointmentId: app.id,
+            patientName: app.patientName,
+            patientPhone: app.patientPhone || '',
+            duration: duration
+        })
+        setModalOpen(true)
+    }
+
     const handleClose = () => {
         setModalOpen(false)
         setSelectedSlot(null)
@@ -57,9 +85,8 @@ export default function CalendarGrid({ therapists, appointments, currentDate: cu
     // Config
     const START_HOUR = 8
     const END_HOUR = 20
-    const SLOT_HEIGHT = 60 // px per 30 mins -> Wait, CSS says 120px height. Let's say 1 hour = 120px? Or 30 mins = 60px?
-    // Let's assume the CSS .timeSlot is for 30 minute blocks.
-    const SLOT_DURATION = 30 // minutes
+    const SLOT_HEIGHT = 60
+    const SLOT_DURATION = 30
 
     // Generate time slots
     const timeSlots: { hour: number; minute: number }[] = []
@@ -77,7 +104,7 @@ export default function CalendarGrid({ therapists, appointments, currentDate: cu
         if (hours < START_HOUR) return -1
 
         const totalMinutes = (hours - START_HOUR) * 60 + minutes
-        return (totalMinutes / SLOT_DURATION) * SLOT_HEIGHT // 60px height per 30 mins
+        return (totalMinutes / SLOT_DURATION) * SLOT_HEIGHT
     }
 
     const getHeight = (startIso: string, endIso: string) => {
@@ -168,9 +195,11 @@ export default function CalendarGrid({ therapists, appointments, currentDate: cu
                                         style={{
                                             top: `${top}px`,
                                             height: `${height}px`,
-                                            backgroundColor: therapist.color
+                                            backgroundColor: therapist.color,
+                                            cursor: 'pointer' // Make it look clickable
                                         }}
-                                        title={app.status}
+                                        title={`${app.patientName} (Click para editar)`}
+                                        onClick={(e) => handleAppointmentClick(e, app, therapist)}
                                     >
                                         <span className={styles.patientName}>{app.patientName}</span>
                                         <span className={styles.timeRange}>
@@ -194,9 +223,15 @@ export default function CalendarGrid({ therapists, appointments, currentDate: cu
                         therapistName={selectedSlot.therapistName}
                         initialDate={selectedSlot.date}
                         initialTime={selectedSlot.time}
+                        // Edit Props
+                        appointmentId={selectedSlot.appointmentId}
+                        initialPatientName={selectedSlot.patientName}
+                        initialPatientPhone={selectedSlot.patientPhone}
+                        initialDuration={selectedSlot.duration}
                     />
                 )
             }
         </div >
     )
 }
+

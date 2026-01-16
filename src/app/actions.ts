@@ -85,6 +85,45 @@ export async function createAppointment(formData: FormData) {
     return { success: true }
 }
 
+export async function cancelAppointment(id: number) {
+    await prisma.appointment.delete({
+        where: { id }
+    })
+    revalidatePath('/')
+}
+
+export async function updateAppointment(formData: FormData) {
+    const id = parseInt(formData.get('appointmentId') as string)
+    const therapistId = parseInt(formData.get('therapistId') as string)
+    const patientName = formData.get('patientName') as string
+    const patientPhone = formData.get('patientPhone') as string
+    const date = formData.get('date') as string
+    const time = formData.get('time') as string
+    const duration = parseInt(formData.get('duration') as string) || 60
+
+    if (!id || !patientName || !date || !time) {
+        return { error: 'Faltan datos' }
+    }
+
+    const startTime = new Date(`${date}T${time}:00`)
+    const endTime = new Date(startTime.getTime() + duration * 60000)
+
+    // Update patient phone if needed (optional)
+    // For simplicity, we just update the appointment details
+    await prisma.appointment.update({
+        where: { id },
+        data: {
+            startTime,
+            endTime,
+            therapistId,
+            // We could also update patient name if we linked it, but patient is separate model
+        }
+    })
+
+    revalidatePath('/')
+    return { success: true }
+}
+
 import { signIn } from '@/auth'
 import { AuthError } from 'next-auth'
 
