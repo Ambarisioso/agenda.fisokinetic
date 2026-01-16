@@ -71,7 +71,7 @@ export default async function Dashboard({ searchParams }: PageProps) {
         </h1>
 
         <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-          <DateSelector currentDate={currentDate.toISOString()} />
+          <DateSelector currentDate={format(currentDate, 'yyyy-MM-dd')} />
         </div>
       </div>
 

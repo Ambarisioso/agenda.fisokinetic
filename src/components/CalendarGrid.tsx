@@ -1,6 +1,6 @@
 'use client'
 
-import { format, differenceInMinutes, startOfDay, parseISO, getHours, getMinutes, addMinutes, isSameDay } from 'date-fns'
+import { format, differenceInMinutes, startOfDay, parseISO, getHours, getMinutes, addMinutes, isSameDay, getDay } from 'date-fns'
 import { es } from 'date-fns/locale'
 import styles from './CalendarGrid.module.css'
 import AppointmentModal from './AppointmentModal'
@@ -83,8 +83,19 @@ export default function CalendarGrid({ therapists, appointments, currentDate: cu
     }
 
     // Config
+    // Config
+    const dayOfWeek = getDay(currentDate)
+    const isSaturday = dayOfWeek === 6
+    const isSunday = dayOfWeek === 0
+
     const START_HOUR = 8
-    const END_HOUR = 18
+    let END_HOUR = 19
+
+    if (isSaturday) {
+        END_HOUR = 14
+    } else if (isSunday) {
+        END_HOUR = 8 // Closed on Sunday
+    }
     const SLOT_HEIGHT = 60
     const SLOT_DURATION = 30
 

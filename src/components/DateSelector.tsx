@@ -11,7 +11,13 @@ interface DateSelectorProps {
 
 export default function DateSelector({ currentDate }: DateSelectorProps) {
     const router = useRouter()
-    const date = parseISO(currentDate)
+
+    // We treat currentDate as a plain date string "YYYY-MM-DD" to avoid timezone issues
+    // parseISO defaults to local time if no TZ info, but here we just want to do date math
+    // simpler: append T00:00:00 to force local calculation or use addDays on the parsed date
+    // Best way: use string manipulation or ensure parseISO treats it as midnight local
+
+    const displayDate = parseISO(currentDate)
 
     const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const newDate = e.target.value
@@ -21,12 +27,12 @@ export default function DateSelector({ currentDate }: DateSelectorProps) {
     }
 
     const handlePrev = () => {
-        const prev = format(subDays(date, 1), 'yyyy-MM-dd')
+        const prev = format(subDays(displayDate, 1), 'yyyy-MM-dd')
         router.push(`/?date=${prev}`)
     }
 
     const handleNext = () => {
-        const next = format(addDays(date, 1), 'yyyy-MM-dd')
+        const next = format(addDays(displayDate, 1), 'yyyy-MM-dd')
         router.push(`/?date=${next}`)
     }
 
@@ -74,7 +80,7 @@ export default function DateSelector({ currentDate }: DateSelectorProps) {
                         }
                     }}
                 >
-                    <span>{format(date, "EEEE d 'de' MMMM, yyyy", { locale: es })}</span>
+                    <span>{format(displayDate, "EEEE d 'de' MMMM, yyyy", { locale: es })}</span>
                     <span style={{ fontSize: '1.2rem' }}>📅</span>
                 </label>
 
@@ -83,7 +89,7 @@ export default function DateSelector({ currentDate }: DateSelectorProps) {
                     ref={dateInputRef}
                     id="date-picker"
                     type="date"
-                    value={format(date, 'yyyy-MM-dd')}
+                    value={currentDate}
                     onChange={handleDateChange}
                     style={{
                         position: 'absolute',
