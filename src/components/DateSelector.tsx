@@ -59,15 +59,17 @@ export default function DateSelector({ currentDate }: DateSelectorProps) {
                     onMouseOut={(e) => e.currentTarget.style.borderColor = 'transparent'}
                     onClick={(e) => {
                         e.preventDefault()
-                        if (dateInputRef.current) {
+                        const input = dateInputRef.current
+                        if (input) {
                             try {
-                                if ('showPicker' in dateInputRef.current) {
-                                    (dateInputRef.current as any).showPicker()
+                                if (typeof (input as any).showPicker === 'function') {
+                                    (input as any).showPicker()
                                 } else {
-                                    dateInputRef.current.click()
+                                    input.click()
                                 }
                             } catch (err) {
-                                dateInputRef.current.click()
+                                // Fallback
+                                input.click()
                             }
                         }
                     }}
