@@ -46,7 +46,9 @@ export async function createAppointment(formData: FormData) {
     }
 
     // Calculate start and end
-    const startTime = new Date(`${date}T${time}:00`)
+    // Calculate start and end
+    // Hardcoded -06:00 for Mexico Central Time (Clinic Location) to ensure correct storage in UTC
+    const startTime = new Date(`${date}T${time}:00-06:00`)
     const endTime = new Date(startTime.getTime() + duration * 60000)
 
     // Find or Create Patient
@@ -105,7 +107,7 @@ export async function updateAppointment(formData: FormData) {
         return { error: 'Faltan datos' }
     }
 
-    const startTime = new Date(`${date}T${time}:00`)
+    const startTime = new Date(`${date}T${time}:00-06:00`)
     const endTime = new Date(startTime.getTime() + duration * 60000)
 
     // Update patient phone if needed (optional)
