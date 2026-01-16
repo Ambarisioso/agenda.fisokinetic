@@ -48,8 +48,8 @@ export default async function RootLayout({
                                 </div>
                             </Link>
                             <div style={{ display: 'flex', gap: '1.5rem', alignItems: 'center' }}>
-                                <Link href="/" className="btn btn-secondary" style={{ border: 'none', background: 'transparent', color: 'var(--text)', fontWeight: 'bold' }}>Agenda</Link>
-                                <Link href="/therapists" className="btn btn-secondary" style={{ border: 'none', background: 'transparent', color: 'var(--text)', fontWeight: 'bold' }}>Terapeutas</Link>
+                                <Link href="/" className="btn btn-secondary" style={{ border: 'none', background: 'transparent', color: '#111827', fontWeight: '600' }}>Agenda</Link>
+                                <Link href="/therapists" className="btn btn-secondary" style={{ border: 'none', background: 'transparent', color: '#111827', fontWeight: '600' }}>Terapeutas</Link>
                                 <div style={{ width: '1px', height: '24px', background: 'var(--border)' }}></div>
                                 <LogoutButton />
                             </div>
