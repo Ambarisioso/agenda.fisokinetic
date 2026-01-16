@@ -84,7 +84,7 @@ export default function CalendarGrid({ therapists, appointments, currentDate: cu
 
     // Config
     const START_HOUR = 8
-    const END_HOUR = 20
+    const END_HOUR = 18
     const SLOT_HEIGHT = 60
     const SLOT_DURATION = 30
 

@@ -60,7 +60,15 @@ export default function DateSelector({ currentDate }: DateSelectorProps) {
                     onClick={(e) => {
                         e.preventDefault()
                         if (dateInputRef.current) {
-                            dateInputRef.current.click()
+                            try {
+                                if ('showPicker' in dateInputRef.current) {
+                                    (dateInputRef.current as any).showPicker()
+                                } else {
+                                    dateInputRef.current.click()
+                                }
+                            } catch (err) {
+                                dateInputRef.current.click()
+                            }
                         }
                     }}
                 >
@@ -79,9 +87,14 @@ export default function DateSelector({ currentDate }: DateSelectorProps) {
                         position: 'absolute',
                         top: 0,
                         left: 0,
-                        width: 0,
-                        height: 0,
+                        width: '1px',
+                        height: '1px',
                         opacity: 0,
+                        padding: 0,
+                        margin: -1,
+                        overflow: 'hidden',
+                        whiteSpace: 'nowrap',
+                        border: 0,
                         pointerEvents: 'none'
                     }}
                 />
