@@ -1,0 +1,118 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    height: calc(100vh - 100px);
+    /* Adjust based on header */
+    background: var(--surface);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-md);
+    overflow: hidden;
+    border: 1px solid var(--border);
+}
+
+.header {
+    display: flex;
+    border-bottom: 1px solid var(--border);
+    background: var(--background);
+}
+
+.timeHeader {
+    width: 80px;
+    flex-shrink: 0;
+    border-right: 1px solid var(--border);
+    background: var(--surface);
+}
+
+.therapistHeader {
+    flex: 1;
+    padding: 1rem;
+    text-align: center;
+    font-weight: 600;
+    border-right: 1px solid var(--border);
+    color: var(--text);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+.therapistHeader:last-child {
+    border-right: none;
+}
+
+.dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+}
+
+.body {
+    flex: 1;
+    overflow-y: auto;
+    display: flex;
+}
+
+.timeColumn {
+    width: 80px;
+    flex-shrink: 0;
+    border-right: 1px solid var(--border);
+    background: var(--background);
+}
+
+.timeSlot {
+    height: 60px;
+    /* 1 hour per 60px, or 30 mins */
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+}
+
+.column {
+    flex: 1;
+    border-right: 1px solid var(--border);
+    position: relative;
+    background: var(--surface);
+}
+
+.column:last-child {
+    border-right: none;
+}
+
+.slot {
+    height: 60px;
+    border-bottom: 1px solid var(--border);
+    /* Optional: lighter border or dashed */
+}
+
+.appointment {
+    position: absolute;
+    left: 4px;
+    right: 4px;
+    padding: 4px 8px;
+    border-radius: var(--radius-sm);
+    font-size: 0.85rem;
+    color: white;
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+    cursor: pointer;
+    transition: transform 0.1s, z-index 0.1s;
+}
+
+.appointment:hover {
+    transform: scale(1.02);
+    z-index: 10;
+    box-shadow: var(--shadow-md);
+}
+
+.patientName {
+    font-weight: 600;
+    display: block;
+}
+
+.timeRange {
+    font-size: 0.75rem;
+    opacity: 0.9;
+}
