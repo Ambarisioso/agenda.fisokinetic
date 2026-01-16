@@ -17,7 +17,7 @@ export default function LoginPage() {
         }}>
             <div className="card" style={{ width: '400px', padding: '2rem' }}>
                 <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
-                    <Image src="/logo.svg" alt="Fisiokinetic" width={200} height={80} style={{ objectFit: 'contain' }} />
+                    <img src="/logo.svg" alt="Fisiokinetic" width={200} height={80} style={{ objectFit: 'contain' }} />
                 </div>
 
                 <h2 style={{ textAlign: 'center', marginBottom: '1.5rem', color: 'var(--primary)' }}>Iniciar Sesión</h2>

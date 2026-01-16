@@ -40,12 +40,10 @@ export default async function RootLayout({
                         }}>
                             <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', textDecoration: 'none' }}>
                                 <div style={{ position: 'relative', width: '150px', height: '50px' }}>
-                                    <Image
+                                    <img
                                         src="/logo.svg"
                                         alt="Fisiokinetic Logo"
-                                        fill
-                                        style={{ objectFit: 'contain', objectPosition: 'left' }}
-                                        priority
+                                        style={{ objectFit: 'contain', objectPosition: 'left', width: '100%', height: '100%' }}
                                     />
                                 </div>
                             </Link>
