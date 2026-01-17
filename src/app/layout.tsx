@@ -5,6 +5,7 @@ import Link from 'next/link'
 import './globals.css'
 import LogoutButton from '../components/LogoutButton'
 import { auth } from '../auth'
+import FisiokineticLogo from '../components/FisiokineticLogo'
 
 const notoSans = Noto_Sans({ subsets: ['latin'], weight: ['400', '500', '700'] })
 

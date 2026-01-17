@@ -3,6 +3,7 @@
 import { useFormState, useFormStatus } from 'react-dom'
 import { authenticate } from '@/app/actions'
 import Image from 'next/image'
+import FisiokineticLogo from '@/components/FisiokineticLogo'
 
 export default function LoginPage() {
     const [errorMessage, dispatch] = useFormState(authenticate, undefined)
