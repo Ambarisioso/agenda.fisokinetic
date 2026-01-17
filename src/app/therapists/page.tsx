@@ -1,7 +1,7 @@
 import { prisma } from '@/lib/prisma'
 import TherapistForm from '@/components/TherapistForm'
-import { deleteTherapist } from '@/app/actions'
 import { Therapist } from '@prisma/client'
+import DeleteTherapistButton from '@/components/DeleteTherapistButton'
 
 export const dynamic = 'force-dynamic'
 
@@ -45,11 +45,7 @@ export default async function TherapistsPage() {
                                             </div>
                                         </div>
 
-                                        <form action={deleteTherapist.bind(null, t.id)}>
-                                            <button type="submit" style={{ color: 'var(--danger)', background: 'none', border: 'none', fontSize: '0.85rem' }}>
-                                                Eliminar
-                                            </button>
-                                        </form>
+                                        <DeleteTherapistButton id={t.id} />
                                     </div>
                                 ))}
                             </div>
