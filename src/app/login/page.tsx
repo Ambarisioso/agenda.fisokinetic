@@ -16,8 +16,8 @@ export default function LoginPage() {
             backgroundColor: '#f8fafc'
         }}>
             <div className="card" style={{ width: '400px', padding: '2rem' }}>
-                <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
-                    <img src="/logo.svg" alt="Fisiokinetic" width={200} height={80} style={{ objectFit: 'contain' }} />
+                <div style={{ width: '200px', margin: '0 auto' }}>
+                    <FisiokineticLogo style={{ width: '100%', height: 'auto' }} />
                 </div>
 
                 <h2 style={{ textAlign: 'center', marginBottom: '1.5rem', color: 'var(--primary)' }}>Iniciar Sesión</h2>

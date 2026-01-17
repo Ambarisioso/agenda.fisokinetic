@@ -39,12 +39,8 @@ export default async function RootLayout({
                             paddingBottom: '0.75rem'
                         }}>
                             <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', textDecoration: 'none' }}>
-                                <div style={{ position: 'relative', width: '150px', height: '50px' }}>
-                                    <img
-                                        src="/logo.svg"
-                                        alt="Fisiokinetic Logo"
-                                        style={{ objectFit: 'contain', objectPosition: 'left', width: '100%', height: '100%' }}
-                                    />
+                                <div style={{ position: 'relative', width: '150px' }}>
+                                    <FisiokineticLogo style={{ width: '100%', height: 'auto' }} />
                                 </div>
                             </Link>
                             <div style={{ display: 'flex', gap: '1.5rem', alignItems: 'center' }}>
