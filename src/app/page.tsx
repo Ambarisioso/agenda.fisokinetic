@@ -84,7 +84,7 @@ export default async function Dashboard({ searchParams }: PageProps) {
         </div>
       ) : (
         <CalendarGrid
-          currentDate={currentDate.toISOString()}
+          currentDate={format(currentDate, 'yyyy-MM-dd')}
           therapists={therapists}
           appointments={serializedApps}
         />
